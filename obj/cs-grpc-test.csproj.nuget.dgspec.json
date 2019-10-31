@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/mac/develop/yue/dotnet/cs-grpc-test/cs-grpc-test.csproj": {}
+    "/Users/mac/develop/yue/cs/cs-grpc-test/cs-grpc-test.csproj": {}
   },
   "projects": {
-    "/Users/mac/develop/yue/dotnet/cs-grpc-test/cs-grpc-test.csproj": {
+    "/Users/mac/develop/yue/cs/cs-grpc-test/cs-grpc-test.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mac/develop/yue/dotnet/cs-grpc-test/cs-grpc-test.csproj",
+        "projectUniqueName": "/Users/mac/develop/yue/cs/cs-grpc-test/cs-grpc-test.csproj",
         "projectName": "cs-grpc-test",
-        "projectPath": "/Users/mac/develop/yue/dotnet/cs-grpc-test/cs-grpc-test.csproj",
+        "projectPath": "/Users/mac/develop/yue/cs/cs-grpc-test/cs-grpc-test.csproj",
         "packagesPath": "/Users/mac/.nuget/packages/",
-        "outputPath": "/Users/mac/develop/yue/dotnet/cs-grpc-test/obj/",
+        "outputPath": "/Users/mac/develop/yue/cs/cs-grpc-test/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/mac/.nuget/NuGet/NuGet.Config"
