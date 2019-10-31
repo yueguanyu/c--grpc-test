@@ -1,26 +1,37 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Grpc.Core;
+using Helloworld;
 
 namespace cs_grpc_test
 {
-    public class Program
+    class GreeterImpl : Greeter.GreeterBase
     {
+        // Server side handler of the SayHello RPC
+        public override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
+        {
+            return Task.FromResult(new HelloReply { Message = "Hello " + request.Name });
+        }
+    }
+
+    class Program
+    {
+        const int Port = 50051;
+
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
-        }
+            Server server = new Server
+            {
+                Services = { Greeter.BindService(new GreeterImpl()) },
+                Ports = { new ServerPort("localhost", Port, ServerCredentials.Insecure) }
+            };
+            server.Start();
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+            Console.WriteLine("Greeter server listening on port " + Port);
+            Console.WriteLine("Press any key to stop the server...");
+            Console.ReadKey();
+
+            server.ShutdownAsync().Wait();
+        }
     }
 }
