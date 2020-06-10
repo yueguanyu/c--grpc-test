@@ -10,6 +10,7 @@ namespace cs_grpc_test
 {
     public class GreeterImpl : Greeter.GreeterBase
     {
+        public Dictionary<string, IServerStreamWriter<HelloReply>> PlayerStreams = new Dictionary<string, IServerStreamWriter<HelloReply>>();
         // Server side handler of the SayHello RPC
         public override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
         {
@@ -18,27 +19,32 @@ namespace cs_grpc_test
 
         public override async Task SayStream(IAsyncStreamReader<HelloRequest> requestStream, IServerStreamWriter<HelloReply> responseStream, ServerCallContext context)
         {
-            var raceDuration = TimeSpan.Parse(context.RequestHeaders.Single(h => h.Key == "race-duration").Value);
+            var authToken = context.RequestHeaders.Single(h => h.Key == "authentication").Value;
+            Console.WriteLine($"authToken:{authToken}");
 
             // Read incoming messages in a background task
             HelloRequest? lastMessageReceived = null;
-            // var readTask = Task.Run(async () =>
-            // {
-            //     await foreach (var message in requestStream.ReadAllAsync())
-            //     {
-            //         lastMessageReceived = message;
-            //     }
-            // });
+            var readTask = Task.Run(async () =>
+            {
+                if (!PlayerStreams.ContainsKey(authToken))
+                {
+                    PlayerStreams.Add(authToken, responseStream);
+                }
+                await foreach (var message in requestStream.ReadAllAsync())
+                {
+                    lastMessageReceived = message;
+                    Console.WriteLine($"lastMessageReceived: {lastMessageReceived}");
+                    await PlayerStreams[authToken].WriteAsync(new HelloReply { Message = "hello" + message.Name });
+                    if (message.Name == "stop")
+                    {
+                        break;
+                    }
+                }
+                PlayerStreams.Remove(authToken);
+                return "";
+            });
 
-            // // Write outgoing messages until timer is complete
-            // var sw = Stopwatch.StartNew();
-            // var sent = 0;
-            // while (sw.Elapsed < raceDuration)
-            // {
-            //     await responseStream.WriteAsync(new HelloReply { });
-            // }
-
-            // await readTask;
+            await readTask;
         }
     }
 }

@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>cs_grpc_test</RootNamespace>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Protobuf Include="proto/**/*.proto" />
+    <PackageReference Include="Grpc.AspNetCore" Version="$(GrpcDotNetPackageVersion)" />
   </ItemGroup>
 
 </Project>
